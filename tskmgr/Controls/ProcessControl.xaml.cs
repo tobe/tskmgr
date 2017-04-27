@@ -135,9 +135,9 @@ namespace tskmgr.Controls
 
                 await metroWindow.ShowMessageAsync("Success", String.Format("{0}.exe has been successfully killed.", selectedProcess.ProcessName));
             }
-            catch (System.ArgumentException e_)
+            catch (System.ArgumentException _e)
             {
-                await metroWindow.ShowMessageAsync("Error", "There has been trouble killing the process: " + e_.Message);
+                await metroWindow.ShowMessageAsync("Error", "There has been trouble killing the process: " + _e.Message);
             }
         }
 

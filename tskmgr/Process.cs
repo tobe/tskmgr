@@ -27,8 +27,8 @@ namespace tskmgr
                 this.NotifyPropertyChanged("ProcessName");
             }
         }
-        private System.TimeSpan processTime;
-        public System.TimeSpan ProcessTime {
+        private string processTime;
+        public string ProcessTime {
             get { return this.processTime; }
             set
             {
@@ -52,6 +52,16 @@ namespace tskmgr
             {
                 this.workingSet64 = value;
                 this.NotifyPropertyChanged("WorkingSet64");
+            }
+        }
+        private string priorityClass;
+        public string PriorityClass
+        {
+            get { return this.priorityClass; }
+            set
+            {
+                this.priorityClass = value;
+                this.NotifyPropertyChanged("PriorityClass");
             }
         }
 
@@ -86,6 +96,27 @@ namespace tskmgr
             }
         }
 
+        private string ParsePriority(ProcessPriorityClass processPriority) 
+        {
+            switch (processPriority)
+            {
+                case ProcessPriorityClass.Normal:
+                    return "Normal";
+                case ProcessPriorityClass.Idle:
+                    return "Idle";
+                case ProcessPriorityClass.High:
+                    return "High";
+                case ProcessPriorityClass.RealTime:
+                    return "Realtime";
+                case ProcessPriorityClass.BelowNormal:
+                    return "Below normal";
+                case ProcessPriorityClass.AboveNormal:
+                    return "Above normal";
+                default:
+                    return "Unknown";
+            }
+        }
+
         /// <summary>
         /// Vraća kolekciju (ObservableCollection) ProcessList klasâ.
         /// </summary>
@@ -101,9 +132,18 @@ namespace tskmgr
                 ProcessList singleProcess   = new ProcessList();
                 singleProcess.ProcessId     = p.Id;
                 singleProcess.ProcessName   = (p.ProcessName != "Idle") ? p.ProcessName + ".exe" : p.ProcessName;
-                singleProcess.ProcessTime   = (p.Id != 0) ? p.TotalProcessorTime : new System.TimeSpan(0, 0, 0);
+                try {
+                    singleProcess.ProcessTime = p.TotalProcessorTime.ToString(@"h\h\ m\m");
+                }catch(System.ComponentModel.Win32Exception e) {
+                    singleProcess.ProcessTime = "0h 0m";
+                }
                 singleProcess.ThreadCount   = p.Threads.Count;
-                singleProcess.WorkingSet64  = p.WorkingSet64;
+                singleProcess.WorkingSet64  = p.WorkingSet64 / 1000;
+                try {
+                    singleProcess.PriorityClass = this.ParsePriority(p.PriorityClass);
+                }catch(Exception e) {
+                    singleProcess.PriorityClass = "Unknown";
+                }
 
                 // I dodaj u kolekciju.
                 returnList.Add(singleProcess);
