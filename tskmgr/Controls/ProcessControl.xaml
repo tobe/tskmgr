@@ -21,7 +21,7 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <DataGrid Grid.Row="0" Grid.Column="0" x:Name="DataGrid" SelectionChanged="DataGrid_SelectionChanged" ItemsSource="{Binding Path=ProcessCollection, IsAsync=False, Mode=TwoWay}" SelectionMode="Single" IsSynchronizedWithCurrentItem="True" AutoGenerateColumns="False" EnableRowVirtualization="True" EnableColumnVirtualization="True" CanUserAddRows="False">
+        <DataGrid Grid.Row="0" Grid.Column="0" x:Name="DataGrid" SelectionUnit="FullRow" SelectionChanged="DataGrid_SelectionChanged" ItemsSource="{Binding Path=ProcessCollection, IsAsync=False, Mode=TwoWay}" SelectionMode="Single" IsSynchronizedWithCurrentItem="False" AutoGenerateColumns="False" CanUserAddRows="False">
             <!--<DataGrid x:Name="DataGrid" AutoGenerateColumns="True" EnableRowVirtualization="True" EnableColumnVirtualization="True" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingStackPanel.IsVirtualizing="True">-->
             <DataGrid.Columns>
                 <DataGridTextColumn Header="PID" Binding="{Binding ProcessId}" />
@@ -33,24 +33,12 @@
         </DataGrid>
 
         <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
-            <Button x:Name="LeftButton" Width="auto" Margin="2 2 10 2">End Process</Button>
-            <Button x:Name="RightButton" Width="auto" Margin="2 2 2 2">New Process</Button>
+            <Button x:Name="EndProcessButton" Click="EndProcessButton_Click" Width="auto" Margin="2 2 10 2">End Process</Button>
+            <Button x:Name="NewProcessButton" Click="NewProcessButton_Click" Width="auto" Margin="2 2 2 2">New Process</Button>
         </StackPanel>
         <!--<StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
         </StackPanel>-->
-
-        <!--<StatusBar Grid.Row="3" Grid.Column="1">
-            <Grid>
-                <ColumnDefinition Width="100"></ColumnDefinition>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition Width="100"></ColumnDefinition>
-            </Grid>
-            <StatusBarItem x:Name="CPUUsage">CPU Usage:</StatusBarItem>
-            <Separator Style="{StaticResource MetroStatusBarSeparator}" />
-            <StatusBarItem x:Name="ProcessCount">Something</StatusBarItem>
-        </StatusBar>-->
+        
         <DockPanel Grid.Row="3" Grid.Column="1">
             <StatusBar DockPanel.Dock="Bottom">
                 <StatusBar.ItemsPanel>
@@ -81,9 +69,6 @@
                 <StatusBarItem Grid.Column="5">
                     <TextBlock x:Name="MemoryUsage">Available Memory: 0MB</TextBlock>
                 </StatusBarItem>
-                <!--<StatusBarItem Grid.Column="3">
-                    <TextBlock>Go!</TextBlock>
-                </StatusBarItem>-->
             </StatusBar>
         </DockPanel>
 

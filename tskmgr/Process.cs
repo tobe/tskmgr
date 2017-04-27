@@ -89,7 +89,7 @@ namespace tskmgr
             {
                 ProcessList singleProcess = new ProcessList();
                 singleProcess.ProcessId = p.Id;
-                singleProcess.ProcessName = p.ProcessName;
+                singleProcess.ProcessName = p.ProcessName + ".exe";
                 singleProcess.ProcessTime = (p.Id != 0) ? p.TotalProcessorTime : new System.TimeSpan(0, 0, 0);
                 singleProcess.ThreadCount = p.Threads.Count;
                 singleProcess.WorkingSet64 = p.WorkingSet64;
