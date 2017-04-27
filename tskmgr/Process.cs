@@ -87,12 +87,12 @@ namespace tskmgr
             System.Diagnostics.Process[] localProcesses = System.Diagnostics.Process.GetProcesses();
             foreach (var p in localProcesses)
             {
-                ProcessList singleProcess = new ProcessList();
-                singleProcess.ProcessId = p.Id;
-                singleProcess.ProcessName = p.ProcessName + ".exe";
-                singleProcess.ProcessTime = (p.Id != 0) ? p.TotalProcessorTime : new System.TimeSpan(0, 0, 0);
-                singleProcess.ThreadCount = p.Threads.Count;
-                singleProcess.WorkingSet64 = p.WorkingSet64;
+                ProcessList singleProcess   = new ProcessList();
+                singleProcess.ProcessId     = p.Id;
+                singleProcess.ProcessName   = (p.ProcessName != "Idle") ? p.ProcessName + ".exe" : p.ProcessName;
+                singleProcess.ProcessTime   = (p.Id != 0) ? p.TotalProcessorTime : new System.TimeSpan(0, 0, 0);
+                singleProcess.ThreadCount   = p.Threads.Count;
+                singleProcess.WorkingSet64  = p.WorkingSet64;
 
                 returnList.Add(singleProcess);
             }

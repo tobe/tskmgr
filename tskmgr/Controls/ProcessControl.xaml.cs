@@ -104,14 +104,16 @@ namespace tskmgr.Controls
             }
         }
 
+        /// <summary>
+        /// Funkcija pozvana nakon što se stisne na dugme "End Process"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void EndProcessButton_Click(object sender, RoutedEventArgs e)
         {
-            /*Debug.WriteLine("Selected index is: " + this.selectedIndex);
-            Debug.WriteLine("Process is: " + this.ProcessCollection[this.selectedIndex].ProcessName + " and PID is: " + this.ProcessCollection[this.selectedIndex].ProcessId);*/
-
             /*
              * Kako je ObservableCollection bindan sa UI-jem, svaki indeks ProcessList klase je sinkroniziran s DataGridom!
-             * Dakle, kako znamo već index selektiranog retka, jednostavno znamo i indeks tog elementa (klase) u ProcessList.
+             * Možemo dohvatit trenutno odabrani redak jednostavnim castom.
              * */
             try
             {
@@ -129,9 +131,27 @@ namespace tskmgr.Controls
             }
         }
 
-        private void NewProcessButton_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Funkcija pozvana nakon klika na New Process dugme.
+        /// Cijelo čekanje korisnikovog inputa odvija se u zasebnom threadu.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void NewProcessButton_Click(object sender, RoutedEventArgs e)
         {
+            var result = await metroWindow.ShowInputAsync("New Process", "Input the process name");
 
+            if (result == null) return;
+
+            try
+            {
+                System.Diagnostics.Process.Start(result);
+            }catch(System.ComponentModel.Win32Exception _e)
+            {
+                await metroWindow.ShowMessageAsync("Error", "There has been an error trying to invoke the process: " + _e.Message);
+            }
+
+            await metroWindow.ShowMessageAsync("New Process", "The process " + result + " has been successfully started.");
         }
     }
 }
