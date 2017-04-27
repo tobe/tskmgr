@@ -21,28 +21,39 @@ namespace tskmgr.Controls
     /// </summary>
     public partial class ProcessControl : UserControl, INotifyPropertyChanged
     {
+        // Referenca na glavni MahApps prozor
+        private MetroWindow metroWindow = (Application.Current.MainWindow as MetroWindow);
+
+        // ObservableCollection kolekcija informacija o procesima
         public ObservableCollection<ProcessList> ProcessCollection { get; set; }
+
+        // Praćenje zadnjeg procesa zbog fokusiranja
         private int lastPID = 0;
 
-        private Process _Process = new Process();
-
-        private MetroWindow metroWindow = (Application.Current.MainWindow as MetroWindow);
+        // Process object
+        private Process oProcess = new Process();
 
         public ProcessControl()
         {
             InitializeComponent();
             this.DataContext = this;
-            this.ProcessCollection = _Process.GetProcessList();
+            this.ProcessCollection = oProcess.GetProcessList();
 
             // Stvaranje nove niti za asinkrono ažuriranje sadržaja
             AsyncUpdate();
         }
 
+        /// <summary>
+        /// Metoda koja postavlja pozadinsku nit za dohvaćanje novih informacija o procesima
+        /// </summary>
         private async void AsyncUpdate()
         {
             await Task.Factory.StartNew(() => this.UpdateData(), TaskCreationOptions.LongRunning);
         }
 
+        /// <summary>
+        /// Asinkrona metoda koja dohvaća nove podatke i ažurira GUI
+        /// </summary>
         private void UpdateData()
         {
             // http://stackoverflow.com/questions/19558644/update-an-observablecollection-from-another-collection
@@ -53,7 +64,7 @@ namespace tskmgr.Controls
                     this.ProcessCollection.Clear();
                 });
 
-                var newProcesses = _Process.GetProcessList(); // Dohvati nove procese
+                var newProcesses = oProcess.GetProcessList(); // Dohvati nove procese
                 // Pozovi UI nit da doda svaki unos, jedan po jedan -- Smanjuje blokiranje GUI niti na koju se offloada cijela kolekcija.
                 foreach (var p in newProcesses)
                 {
@@ -74,8 +85,8 @@ namespace tskmgr.Controls
                         DataGrid.SelectedItem = this.ProcessCollection[i];
 
                     // Ažuriraj CPU i RAM Usage
-                    this.CPUUsage.Text      = String.Format("CPU Usage: {0}%", (int)_Process.GetTotalCPUUsage());
-                    this.MemoryUsage.Text   = String.Format("Available Memory: {0}MB", (int)_Process.GetTotalMemoryUsage());
+                    this.CPUUsage.Text      = String.Format("CPU Usage: {0}%", (int)oProcess.GetTotalCpuUsage);
+                    this.MemoryUsage.Text   = String.Format("Available Memory: {0}MB", (int)oProcess.GetTotalMemoryUsage);
                     this.Processes.Text     = String.Format("Processes: {0}", this.ProcessCollection.Count.ToString());
                 });
 
@@ -90,7 +101,7 @@ namespace tskmgr.Controls
         }
 
         /// <summary>
-        /// Funkcija pozvana nakon što se promijeni korisnički odabir u DataGridu (odabere redak)
+        /// Metoda pozvana nakon što se promijeni korisnički odabir u DataGridu (odabere redak)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -105,7 +116,7 @@ namespace tskmgr.Controls
         }
 
         /// <summary>
-        /// Funkcija pozvana nakon što se stisne na dugme "End Process"
+        /// Metoda pozvana nakon što se stisne na dugme "End Process"
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -123,7 +134,6 @@ namespace tskmgr.Controls
                 p.Kill();
 
                 await metroWindow.ShowMessageAsync("Success", String.Format("{0}.exe has been successfully killed.", selectedProcess.ProcessName));
-                //this.DataGrid.SelectedItem = this.ProcessCollection[0];
             }
             catch (System.ArgumentException e_)
             {
@@ -140,7 +150,6 @@ namespace tskmgr.Controls
         private async void NewProcessButton_Click(object sender, RoutedEventArgs e)
         {
             var result = await metroWindow.ShowInputAsync("New Process", "Input the process name");
-
             if (result == null) return;
 
             try

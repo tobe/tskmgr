@@ -16,10 +16,10 @@
         WindowStartupLocation="CenterScreen">
     <Grid>
         <TabControl Padding="0" Margin="-2,0,-2,-2">
-            <TabItem Header="Applications">
+            <TabItem Header="Processes">
                 <Controls:ProcessControl></Controls:ProcessControl>
             </TabItem>
-            <TabItem Header="Processes" />
+            <TabItem Header="Applications" />
             <TabItem Header="Services" />
             <TabItem Header="Specifications" />
         </TabControl>

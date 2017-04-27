@@ -65,25 +65,36 @@ namespace tskmgr
 
     public class Process
     {
-        PerformanceCounter CPUCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-        PerformanceCounter MEMCounter = new PerformanceCounter("Memory", "Available MBytes");
+        PerformanceCounter CpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+        PerformanceCounter MemCounter = new PerformanceCounter("Memory", "Available MBytes");
 
         public Process() { }
 
-        public float GetTotalCPUUsage()
+        public float GetTotalCpuUsage
         {
-            return this.CPUCounter.NextValue();
+            get
+            {
+                return this.CpuCounter.NextValue();
+            }
         }
 
-        public float GetTotalMemoryUsage()
+        public float GetTotalMemoryUsage
         {
-            return this.MEMCounter.NextValue();
+            get
+            {
+                return this.MemCounter.NextValue();
+            }
         }
 
+        /// <summary>
+        /// Vraća kolekciju (ObservableCollection) ProcessList klasâ.
+        /// </summary>
+        /// <returns></returns>
         public ObservableCollection<ProcessList> GetProcessList()
         {
             ObservableCollection<ProcessList> returnList = new ObservableCollection<ProcessList>();
 
+            // Dohvati sve nove procese i jednostavno za svaki kreiraj klasu
             System.Diagnostics.Process[] localProcesses = System.Diagnostics.Process.GetProcesses();
             foreach (var p in localProcesses)
             {
@@ -94,6 +105,7 @@ namespace tskmgr
                 singleProcess.ThreadCount   = p.Threads.Count;
                 singleProcess.WorkingSet64  = p.WorkingSet64;
 
+                // I dodaj u kolekciju.
                 returnList.Add(singleProcess);
             }
 
