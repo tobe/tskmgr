@@ -19,7 +19,9 @@
             <TabItem Header="Processes">
                 <Controls:ProcessControl></Controls:ProcessControl>
             </TabItem>
-            <TabItem Header="Applications" />
+            <TabItem Header="Applications">
+                <Controls:ApplicationsControl></Controls:ApplicationsControl>
+            </TabItem>
             <TabItem Header="Services" />
             <TabItem Header="Specifications" />
         </TabControl>

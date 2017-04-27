@@ -82,18 +82,12 @@ namespace tskmgr
 
         public float GetTotalCpuUsage
         {
-            get
-            {
-                return this.CpuCounter.NextValue();
-            }
+            get { return this.CpuCounter.NextValue(); }
         }
 
         public float GetTotalMemoryUsage
         {
-            get
-            {
-                return this.MemCounter.NextValue();
-            }
+            get { return this.MemCounter.NextValue(); }
         }
 
         private string ParsePriority(ProcessPriorityClass processPriority) 
