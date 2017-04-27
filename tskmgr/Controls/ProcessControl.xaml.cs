@@ -22,10 +22,11 @@ namespace tskmgr.Controls
     public partial class ProcessControl : UserControl, INotifyPropertyChanged
     {
         public ObservableCollection<ProcessList> ProcessCollection { get; set; }
-        private int selectedIndex = 0;
         private int lastPID = 0;
 
         private Process _Process = new Process();
+
+        private MetroWindow metroWindow = (Application.Current.MainWindow as MetroWindow);
 
         public ProcessControl()
         {
@@ -52,8 +53,7 @@ namespace tskmgr.Controls
                     this.ProcessCollection.Clear();
                 });
 
-                // Dohvati nove procese
-                var newProcesses = _Process.GetProcessList();
+                var newProcesses = _Process.GetProcessList(); // Dohvati nove procese
                 // Pozovi UI nit da doda svaki unos, jedan po jedan -- Smanjuje blokiranje GUI niti na koju se offloada cijela kolekcija.
                 foreach (var p in newProcesses)
                 {
@@ -70,7 +70,8 @@ namespace tskmgr.Controls
                     {
                         if (this.ProcessCollection[i].ProcessId == this.lastPID) break;
                     }
-                    DataGrid.SelectedItem = this.ProcessCollection[i];
+                    if(i < this.ProcessCollection.Count)
+                        DataGrid.SelectedItem = this.ProcessCollection[i];
 
                     // Ažuriraj CPU i RAM Usage
                     this.CPUUsage.Text      = String.Format("CPU Usage: {0}%", (int)_Process.GetTotalCPUUsage());
@@ -88,20 +89,23 @@ namespace tskmgr.Controls
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// Funkcija pozvana nakon što se promijeni korisnički odabir u DataGridu (odabere redak)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //if(DataGrid.SelectedIndex != -1) this.selectedIndex = DataGrid.SelectedIndex;
-            ProcessList test = this.DataGrid.SelectedItem as ProcessList;
-            if (test != null) // ili != -1
+            ProcessList newSelectedProcess = this.DataGrid.SelectedItem as ProcessList;
+            if (newSelectedProcess != null) // ili DataGrid.SelectedIndex != -1
             {
-                Debug.WriteLine(test.ProcessName + " - " + test.ProcessId + ", index:" + this.DataGrid.SelectedIndex);
-                this.lastPID = test.ProcessId;
+                Debug.WriteLine(newSelectedProcess.ProcessName + " - " + newSelectedProcess.ProcessId + ", index:" + this.DataGrid.SelectedIndex);
+                this.lastPID = newSelectedProcess.ProcessId;
             }
         }
 
         private async void EndProcessButton_Click(object sender, RoutedEventArgs e)
         {
-            var metroWindow = (Application.Current.MainWindow as MetroWindow);
             /*Debug.WriteLine("Selected index is: " + this.selectedIndex);
             Debug.WriteLine("Process is: " + this.ProcessCollection[this.selectedIndex].ProcessName + " and PID is: " + this.ProcessCollection[this.selectedIndex].ProcessId);*/
 
@@ -111,14 +115,13 @@ namespace tskmgr.Controls
              * */
             try
             {
-                int processId      = this.ProcessCollection[this.selectedIndex].ProcessId;
-                string processName = this.ProcessCollection[this.selectedIndex].ProcessName;
+                ProcessList selectedProcess = this.DataGrid.SelectedItem as ProcessList;
 
-                System.Diagnostics.Process p = System.Diagnostics.Process.GetProcessById(processId);
-                //p.Kill();
+                System.Diagnostics.Process p = System.Diagnostics.Process.GetProcessById(selectedProcess.ProcessId);
+                p.Kill();
 
-                Debug.WriteLine("Kill {0} - {0}", processId, processName);
-                //await metroWindow.ShowMessageAsync("Success", String.Format("{0}.exe has been successfully killed.", processName));
+                await metroWindow.ShowMessageAsync("Success", String.Format("{0}.exe has been successfully killed.", selectedProcess.ProcessName));
+                //this.DataGrid.SelectedItem = this.ProcessCollection[0];
             }
             catch (System.ArgumentException e_)
             {

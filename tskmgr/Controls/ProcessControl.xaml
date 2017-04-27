@@ -21,8 +21,11 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <DataGrid Grid.Row="0" Grid.Column="0" x:Name="DataGrid" SelectionUnit="FullRow" SelectionChanged="DataGrid_SelectionChanged" ItemsSource="{Binding Path=ProcessCollection, IsAsync=False, Mode=TwoWay}" SelectionMode="Single" IsSynchronizedWithCurrentItem="False" AutoGenerateColumns="False" CanUserAddRows="False">
-            <!--<DataGrid x:Name="DataGrid" AutoGenerateColumns="True" EnableRowVirtualization="True" EnableColumnVirtualization="True" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingStackPanel.IsVirtualizing="True">-->
+        <DataGrid Grid.Row="0" Grid.Column="0" x:Name="DataGrid" SelectionUnit="FullRow"
+                  SelectionChanged="DataGrid_SelectionChanged"
+                  ItemsSource="{Binding Path=ProcessCollection, IsAsync=False, Mode=TwoWay}"
+                  SelectionMode="Single" IsSynchronizedWithCurrentItem="False" AutoGenerateColumns="False"
+                  CanUserAddRows="False" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="PID" Binding="{Binding ProcessId}" />
                 <DataGridTextColumn Header="Image" Binding="{Binding ProcessName}" />
