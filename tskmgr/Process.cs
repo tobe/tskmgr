@@ -125,7 +125,7 @@ namespace tskmgr
         {
             try {
                 return p.TotalProcessorTime.ToString(@"h\h\ m\m");
-            }catch(System.ComponentModel.Win32Exception e) {
+            }catch {
                 return "0h 0m";
             }
         }

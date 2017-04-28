@@ -16,6 +16,9 @@
                 <!-- Dodatne MahApps kontrole, proizvodljno -->
                 <!-- Potrebno zbog lijepih tabova -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedTabControl.xaml" />
+                
+                <!-- Botuni... -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.Buttons.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

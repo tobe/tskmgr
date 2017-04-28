@@ -14,6 +14,20 @@
 
         WindowTransitionsEnabled="True"
         WindowStartupLocation="CenterScreen">
+
+    <MahApps:MetroWindow.RightWindowCommands>
+        <MahApps:WindowCommands ShowLastSeparator="False">
+            <Button x:Name="CPUWindowButton"
+                    Click="CPUWindowButton_Click"
+                    Content="CPU Graph"
+                    ToolTip="Starts and shows the CPU graph window" />
+            <Button x:Name="RAMWindowButton"
+                    Click="RAMWindowButton_Click"
+                    Content="RAM Graph"
+                    ToolTip="Starts and shows the RAM graph window" />
+        </MahApps:WindowCommands>
+    </MahApps:MetroWindow.RightWindowCommands>
+
     <Grid>
         <TabControl Padding="0" Margin="-2,0,-2,-2">
             <TabItem Header="Processes">
