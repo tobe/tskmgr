@@ -6,7 +6,7 @@
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              xmlns:local="clr-namespace:tskmgr.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance local:RAMControl}" Background="#16a085">
+             d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance local:RAMControl}" Background="#c0392b">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width=".7*"></ColumnDefinition>

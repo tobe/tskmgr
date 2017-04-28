@@ -7,13 +7,15 @@
         xmlns:Controls="clr-namespace:tskmgr.Controls"
         xmlns:local="clr-namespace:tskmgr"
         mc:Ignorable="d"
-        Title="RAM Graph" Height="600" Width="800"
+        Title="RAM Graph" Height="200" Width="400"
                      
         BorderThickness="1" 
         BorderBrush="{DynamicResource AccentColorBrush}"
 
         WindowTransitionsEnabled="True"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+                     
+        WindowTitleBrush="#c0392b">
 
     <Grid>
         <Controls:RAMControl></Controls:RAMControl>

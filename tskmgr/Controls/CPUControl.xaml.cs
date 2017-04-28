@@ -138,8 +138,8 @@ namespace tskmgr.Controls
 
         private void SetAxisLimits(DateTime now)
         {
-            AxisMax = now.Ticks + TimeSpan.FromSeconds(2).Ticks; // Forsira os da bude jednu sekundu ispred
-            AxisMin = now.Ticks - TimeSpan.FromSeconds(20).Ticks; // i 8 izad
+            AxisMax = now.Ticks + TimeSpan.FromSeconds(2).Ticks; // Forsira os da bude dvije sekunde ispred
+            AxisMin = now.Ticks - TimeSpan.FromSeconds(20).Ticks; // i 20 izad
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
