@@ -39,8 +39,6 @@ namespace tskmgr
         private CPUWindow CpuWindow;
         private RAMWindow RamWindow;
 
-
-
         public MainWindow()
         {
             InitializeComponent();
@@ -112,6 +110,17 @@ namespace tskmgr
         {
             System.Windows.Threading.Dispatcher.FromThread(RAMThread).InvokeShutdown();
             this.RAMWindowRunning = false;
+        }
+
+        private void MetroWindow_Closing(object sender, CancelEventArgs e)
+        {
+            // Prvo izgasi threadove pa app ;)
+            if(CPUThread != null)
+                System.Windows.Threading.Dispatcher.FromThread(CPUThread).InvokeShutdown();
+            if(RAMThread != null)
+                System.Windows.Threading.Dispatcher.FromThread(RAMThread).InvokeShutdown();
+
+            App.Current.Shutdown();
         }
     }
 }

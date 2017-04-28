@@ -61,12 +61,12 @@ namespace tskmgr
             }
         }
 
-        public static decimal GetOccupiedMemoryPercentage()
+        public static int GetUsedMemoryInMiB()
         {
             Int64 phav = PerformanceInfo.GetPhysicalAvailableMemoryInMiB();
             Int64 tot = PerformanceInfo.GetTotalMemoryInMiB();
 
-            return (100 - (((decimal)phav / (decimal)tot) * 100));
+            return (int)(tot - phav);
         }
     }
 }

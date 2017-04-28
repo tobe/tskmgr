@@ -20,7 +20,6 @@ namespace tskmgr.Controls
         private double _trend;
         private double _peak;
         private double _average;
-        private double _lastCPUUsage;
 
         PerformanceCounter CpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
 

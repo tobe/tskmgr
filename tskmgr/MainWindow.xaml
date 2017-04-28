@@ -13,7 +13,8 @@
         BorderBrush="{DynamicResource AccentColorBrush}"
 
         WindowTransitionsEnabled="True"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Closing="MetroWindow_Closing">
 
     <MahApps:MetroWindow.RightWindowCommands>
         <MahApps:WindowCommands ShowLastSeparator="False">

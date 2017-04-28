@@ -17,47 +17,32 @@ namespace tskmgr.Controls
     {
         private double _axisMax;
         private double _axisMin;
-        private double _trend;
+        private int _trend;
+        private double _peak;
+        private double _average;
 
         public RAMControl()
         {
             InitializeComponent();
 
-            //To handle live data easily, in this case we built a specialized type
-            //the MeasureModel class, it only contains 2 properties
-            //DateTime and Value
-            //We need to configure LiveCharts to handle MeasureModel class
-            //The next code configures MeasureModel  globally, this means
-            //that LiveCharts learns to plot MeasureModel and will use this config every time
-            //a IChartValues instance uses this type.
-            //this code ideally should only run once
-            //you can configure series in many ways, learn more at 
-            //http://lvcharts.net/App/examples/v1/wpf/Types%20and%20Configuration
-
             var mapper = Mappers.Xy<GraphingModel>()
-                .X(model => model.DateTime.Ticks)   //use DateTime.Ticks as X
-                .Y(model => model.Value);           //use the value property as Y
+                .X(model => model.DateTime.Ticks)   // Koristi DateTime.Ticks kao X
+                .Y(model => model.Value);           // Koristi vrijednost kao Y
 
-            //lets save the mapper globally.
             Charting.For<GraphingModel>(mapper);
-
-            //the values property will store our values array
             ChartValues = new ChartValues<GraphingModel>();
 
-            //lets set how to display the X Labels
+            // Specificiraj oblik vremena
             DateTimeFormatter = value => new DateTime((long)value).ToString("mm:ss");
 
-            //AxisStep forces the distance between each separator in the X axis
+            // AxisStep forces the distance between each separator in the X axis
             AxisStep = TimeSpan.FromSeconds(1).Ticks;
-            //AxisUnit forces lets the axis know that we are plotting seconds
-            //this is not always necessary, but it can prevent wrong labeling
-            AxisUnit = TimeSpan.TicksPerSecond;
+            AxisUnit = TimeSpan.TicksPerSecond; // Mapiramo sekunde
 
+            // Postavi granice
             SetAxisLimits(DateTime.Now);
 
-            //The next code simulates data changes every 300 ms
-
-            //IsReading = true;
+            // Pokreni Task odnosno pozadinsku nit koja je zadužena za dohvaćanje novih podataka
             Task.Factory.StartNew(Read);
 
             DataContext = this;
@@ -86,54 +71,80 @@ namespace tskmgr.Controls
                 OnPropertyChanged("AxisMin");
             }
         }
-
-        public bool IsReading { get; set; }
+        public double Peak
+        {
+            get { return _peak; }
+            set
+            {
+                _peak = value;
+                OnPropertyChanged("Peak");
+            }
+        }
+        public double Average
+        {
+            get { return _average; }
+            set
+            {
+                _average = value;
+                OnPropertyChanged("Average");
+            }
+        }
+        public int Trend
+        {
+            get { return _trend; }
+            set
+            {
+                _trend = value;
+                OnPropertyChanged("Trend");
+            }
+        }
 
         private void Read()
         {
+            double sum = 0;
+            int count = 1;
+            this.Peak = 0;
             while (true)
             {
-                Thread.Sleep(1000);
+                Thread.Sleep(1000); // Ažuriramo svakih sekundu
                 var now = DateTime.Now;
 
-                //_trend += r.Next(-8, 10);
-                _trend = (double)PerformanceInfo.GetOccupiedMemoryPercentage();
+                // Dohvati trenutnu vrijednost
+                Trend = PerformanceInfo.GetUsedMemoryInMiB();
 
+                // Izračunaj peak
+                if (_trend > this.Peak) this.Peak = _trend;
+                // I prosjek
+                sum += _trend; this.Average = sum / count;
+
+                // Dodaj u kolekciju
                 ChartValues.Add(new GraphingModel
                 {
                     DateTime = now,
                     Value = _trend
                 });
 
+                // Postavi nove granice
                 SetAxisLimits(now);
 
-                //lets only use the last 150 values
-                if (ChartValues.Count > 10) ChartValues.RemoveAt(0);
+                // Pamti samo zadnjih 50 vrijednosti (zbog performansi i preglednosti)
+                if (ChartValues.Count > 50) ChartValues.RemoveAt(0);
+
+                count++;
             }
         }
 
         private void SetAxisLimits(DateTime now)
         {
-            AxisMax = now.Ticks + TimeSpan.FromSeconds(1).Ticks; // lets force the axis to be 1 second ahead
-            AxisMin = now.Ticks - TimeSpan.FromSeconds(8).Ticks; // and 8 seconds behind
+            AxisMax = now.Ticks + TimeSpan.FromSeconds(1).Ticks; // Forsira os da bude jednu sekundu ispred
+            AxisMin = now.Ticks - TimeSpan.FromSeconds(100).Ticks; // i 8 izad
         }
-
-        private void InjectStopOnClick(object sender, RoutedEventArgs e)
-        {
-            IsReading = !IsReading;
-            if (IsReading) Task.Factory.StartNew(Read);
-        }
-
-        #region INotifyPropertyChanged implementation
-
+    
         public event PropertyChangedEventHandler PropertyChanged;
-
         protected virtual void OnPropertyChanged(string propertyName = null)
         {
             if (PropertyChanged != null)
                 PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        #endregion
     }
 }
