@@ -137,7 +137,7 @@ namespace tskmgr.Controls
                 // Makni ga sada iz liste -- i GUI se automatski ažurira jer implementiramo INotifyPropertyChanged!
                 this.ProcessCollection.Remove(selectedProcess);
 
-                await this.metroWindow.ShowMessageAsync("Success", String.Format("{0}.exe has been successfully killed.", selectedProcess.ProcessName));
+                await this.metroWindow.ShowMessageAsync("Success", String.Format("{0} has been successfully killed.", selectedProcess.ProcessName));
             }catch (System.ArgumentException _e) {
                 await this.metroWindow.ShowMessageAsync("Error", "There has been trouble killing the process: " + _e.Message);
             }

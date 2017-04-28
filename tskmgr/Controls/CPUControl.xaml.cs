@@ -130,7 +130,7 @@ namespace tskmgr.Controls
                 SetAxisLimits(now);
 
                 // Pamti samo zadnjih 50 vrijednosti (zbog performansi i preglednosti)
-                if (ChartValues.Count > 50) ChartValues.RemoveAt(0);
+                if (ChartValues.Count > 150) ChartValues.RemoveAt(0);
 
                 count++;
             }

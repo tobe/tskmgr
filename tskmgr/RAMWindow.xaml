@@ -15,7 +15,7 @@
         WindowTransitionsEnabled="True"
         WindowStartupLocation="CenterScreen"
                      
-        WindowTitleBrush="#c0392b">
+        WindowTitleBrush="#d35400">
 
     <Grid>
         <Controls:RAMControl></Controls:RAMControl>

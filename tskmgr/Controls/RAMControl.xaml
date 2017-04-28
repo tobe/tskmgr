@@ -6,7 +6,7 @@
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              xmlns:local="clr-namespace:tskmgr.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance local:RAMControl}" Background="#c0392b">
+             d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance local:RAMControl}" Background="#d35400">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width=".7*"></ColumnDefinition>
@@ -44,7 +44,7 @@
             <lvc:CartesianChart.AxisY>
                 <lvc:Axis Foreground="White" FontSize="20">
                     <lvc:Axis.Separator>
-                        <lvc:Separator StrokeThickness="1" Stroke="#8EFFFFFF" StrokeDashArray="8" Step="100"/>
+                        <lvc:Separator StrokeThickness="1" Stroke="#8EFFFFFF" StrokeDashArray="8" Step="50"/>
                     </lvc:Axis.Separator>
                 </lvc:Axis>
             </lvc:CartesianChart.AxisY>
