@@ -59,13 +59,13 @@ namespace tskmgr.Controls
             // http://stackoverflow.com/questions/19558644/update-an-observablecollection-from-another-collection
             while (true)
             {
-                // Pozovi UI nit da očisti sve trenutne procese
+                // 1. Pozovi UI nit da očisti sve trenutne procese
                 App.Current.Dispatcher.BeginInvoke((Action)delegate {
                     this.ProcessCollection.Clear();
                 });
 
                 var newProcesses = oProcess.GetProcessList(); // Dohvati nove procese
-                // Pozovi UI nit da doda svaki unos, jedan po jedan -- Smanjuje blokiranje GUI niti na koju se offloada cijela kolekcija.
+                // 2. Pozovi UI nit da doda svaki unos, jedan po jedan -- Smanjuje blokiranje GUI niti na koju se offloada cijela kolekcija.
                 foreach (var p in newProcesses)
                 {
                     App.Current.Dispatcher.BeginInvoke((Action)delegate {
@@ -73,7 +73,7 @@ namespace tskmgr.Controls
                     });
                 }
                 
-                // Par stvarčica na kraju
+                // 3. Par stvarčica na kraju
                 App.Current.Dispatcher.BeginInvoke((Action)delegate {
                     // Nakon ažuriranja kolekcije (uključujući i sortiranje), pronađi prethodno selektirani element i reselektiraj ga.
                     int i;
@@ -90,6 +90,7 @@ namespace tskmgr.Controls
                     this.Processes.Text     = String.Format("Processes: {0}", this.ProcessCollection.Count.ToString());
                 });
 
+                // I to čini svakih 5 sekundi.
                 Task.Delay(5000).Wait();
             }
         }
@@ -107,12 +108,13 @@ namespace tskmgr.Controls
         /// <param name="e"></param>
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // Dohvati trenutni, novoodabrani proces.
             ProcessList newSelectedProcess = this.DataGrid.SelectedItem as ProcessList;
-            if (newSelectedProcess != null) // ili DataGrid.SelectedIndex != -1
-            {
-                Debug.WriteLine(newSelectedProcess.ProcessName + " - " + newSelectedProcess.ProcessId + ", index:" + this.DataGrid.SelectedIndex);
-                this.lastPID = newSelectedProcess.ProcessId;
-            }
+            if (newSelectedProcess == null) return; // ili DataGrid.SelectedIndex == -1
+
+            Debug.WriteLine(newSelectedProcess.ProcessName + " - " + newSelectedProcess.ProcessId + ", index:" + this.DataGrid.SelectedIndex);
+            // Ažuriraj lastPID tako da pokazuje na njegov PID.
+            this.lastPID = newSelectedProcess.ProcessId;
         }
 
         /// <summary>
@@ -126,18 +128,18 @@ namespace tskmgr.Controls
              * Kako je ObservableCollection bindan sa UI-jem, svaki indeks ProcessList klase je sinkroniziran s DataGridom!
              * Možemo dohvatit trenutno odabrani redak jednostavnim castom.
              * */
-            try
-            {
+            try {
                 ProcessList selectedProcess = this.DataGrid.SelectedItem as ProcessList;
 
                 System.Diagnostics.Process p = System.Diagnostics.Process.GetProcessById(selectedProcess.ProcessId);
                 p.Kill();
 
-                await metroWindow.ShowMessageAsync("Success", String.Format("{0}.exe has been successfully killed.", selectedProcess.ProcessName));
-            }
-            catch (System.ArgumentException _e)
-            {
-                await metroWindow.ShowMessageAsync("Error", "There has been trouble killing the process: " + _e.Message);
+                // Makni ga sada iz liste -- i GUI se automatski ažurira jer implementiramo INotifyPropertyChanged!
+                this.ProcessCollection.Remove(selectedProcess);
+
+                await this.metroWindow.ShowMessageAsync("Success", String.Format("{0}.exe has been successfully killed.", selectedProcess.ProcessName));
+            }catch (System.ArgumentException _e) {
+                await this.metroWindow.ShowMessageAsync("Error", "There has been trouble killing the process: " + _e.Message);
             }
         }
 
@@ -149,18 +151,17 @@ namespace tskmgr.Controls
         /// <param name="e"></param>
         private async void NewProcessButton_Click(object sender, RoutedEventArgs e)
         {
+            // Dohvati ime procesa
             var result = await metroWindow.ShowInputAsync("New Process", "Input the process name");
-            if (result == null) return;
+            if (result == null) return; // Cancel stisnut
 
-            try
-            {
+            // Pokušaj ga započeti.
+            try {
                 System.Diagnostics.Process.Start(result);
-            }catch(System.ComponentModel.Win32Exception _e)
-            {
-                await metroWindow.ShowMessageAsync("Error", "There has been an error trying to invoke the process: " + _e.Message);
+                await this.metroWindow.ShowMessageAsync("New Process", "The process " + result + " has been successfully started.");
+            }catch(System.ComponentModel.Win32Exception _e) {
+                await this.metroWindow.ShowMessageAsync("Error", "There has been an error trying to invoke the process: " + _e.Message);
             }
-
-            await metroWindow.ShowMessageAsync("New Process", "The process " + result + " has been successfully started.");
         }
     }
 }
