@@ -29,9 +29,9 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="PID" Binding="{Binding ProcessId}" />
                 <DataGridTextColumn Header="Image" Binding="{Binding ProcessName}" />
-                <DataGridTextColumn Header="Processor Time" Binding="{Binding WorkingSet64}" />
+                <DataGridTextColumn Header="Memory Usage (MB)" Binding="{Binding WorkingSet64}" />
                 <DataGridTextColumn Header="Priority" Binding="{Binding PriorityClass}" />
-                <DataGridTextColumn Header="Memory Usage" Binding="{Binding ProcessTime}" />
+                <DataGridTextColumn Header="Process Time" Binding="{Binding ProcessTime}" />
                 <DataGridTextColumn Header="Thread Count" Binding="{Binding ThreadCount}" />
             </DataGrid.Columns>
         </DataGrid>

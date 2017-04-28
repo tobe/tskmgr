@@ -90,24 +90,43 @@ namespace tskmgr
             get { return this.MemCounter.NextValue(); }
         }
 
-        private string ParsePriority(ProcessPriorityClass processPriority) 
+        /// <summary>
+        /// Parsira prioritet procesa.
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        private string ParsePriority(System.Diagnostics.Process p) 
         {
-            switch (processPriority)
-            {
-                case ProcessPriorityClass.Normal:
-                    return "Normal";
-                case ProcessPriorityClass.Idle:
-                    return "Idle";
-                case ProcessPriorityClass.High:
-                    return "High";
-                case ProcessPriorityClass.RealTime:
-                    return "Realtime";
-                case ProcessPriorityClass.BelowNormal:
-                    return "Below normal";
-                case ProcessPriorityClass.AboveNormal:
-                    return "Above normal";
-                default:
-                    return "Unknown";
+            // Pokušaj dohvatit i parsirat prioritet (ukoliko imamo prava i sl.)
+            try {
+                switch (p.PriorityClass)
+                {
+                    case ProcessPriorityClass.Normal:
+                        return "Normal";
+                    case ProcessPriorityClass.Idle:
+                        return "Idle";
+                    case ProcessPriorityClass.High:
+                        return "High";
+                    case ProcessPriorityClass.RealTime:
+                        return "Realtime";
+                    case ProcessPriorityClass.BelowNormal:
+                        return "Below normal";
+                    case ProcessPriorityClass.AboveNormal:
+                        return "Above normal";
+                    default:
+                        return "Unknown";
+                }
+            }catch {
+                return "Unknown";
+            }
+        }
+
+        private string ParseTotalProcessTime(System.Diagnostics.Process p)
+        {
+            try {
+                return p.TotalProcessorTime.ToString(@"h\h\ m\m");
+            }catch(System.ComponentModel.Win32Exception e) {
+                return "0h 0m";
             }
         }
 
@@ -126,18 +145,10 @@ namespace tskmgr
                 ProcessList singleProcess   = new ProcessList();
                 singleProcess.ProcessId     = p.Id;
                 singleProcess.ProcessName   = (p.ProcessName != "Idle") ? p.ProcessName + ".exe" : p.ProcessName;
-                try {
-                    singleProcess.ProcessTime = p.TotalProcessorTime.ToString(@"h\h\ m\m");
-                }catch(System.ComponentModel.Win32Exception e) {
-                    singleProcess.ProcessTime = "0h 0m";
-                }
+                singleProcess.ProcessTime   = this.ParseTotalProcessTime(p);
                 singleProcess.ThreadCount   = p.Threads.Count;
                 singleProcess.WorkingSet64  = p.WorkingSet64 / 1000;
-                try {
-                    singleProcess.PriorityClass = this.ParsePriority(p.PriorityClass);
-                }catch(Exception e) {
-                    singleProcess.PriorityClass = "Unknown";
-                }
+                singleProcess.PriorityClass = this.ParsePriority(p);
 
                 // I dodaj u kolekciju.
                 returnList.Add(singleProcess);
