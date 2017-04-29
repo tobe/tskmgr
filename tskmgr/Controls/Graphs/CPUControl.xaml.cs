@@ -13,9 +13,11 @@ namespace tskmgr.Controls
     /// <summary>
     /// Interaction logic for CPUControl.xaml
     /// </summary>
-    public partial class RAMControl : GraphControl
+    public partial class CPUControl : GraphControl
     {
-        public RAMControl()
+        PerformanceCounter CpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+
+        public CPUControl()
         {
             InitializeComponent();
         }
@@ -34,24 +36,24 @@ namespace tskmgr.Controls
                 var now = DateTime.Now;
 
                 // Dohvati trenutnu vrijednost
-                Trend = PerformanceInfo.GetUsedMemoryInMiB();
+                Trend = CpuCounter.NextValue();
 
                 // Izračunaj peak
-                if (trend > this.Peak) this.Peak = trend;
+                if(Trend > this.Peak) this.Peak = Trend;
                 // I prosjek
-                sum += trend; this.Average = sum / count;
+                sum += Trend; this.Average = sum / count;
 
                 // Dodaj u kolekciju
                 ChartValues.Add(new GraphingModel
                 {
                     DateTime = now,
-                    Value = trend
+                    Value = Trend
                 });
 
                 // Postavi nove granice
                 SetAxisLimits(now);
 
-                // Pamti samo zadnjih 150 vrijednosti (zbog performansi i preglednosti)
+                // Pamti samo zadnjih 50 vrijednosti (zbog performansi i preglednosti)
                 if (ChartValues.Count > 150) ChartValues.RemoveAt(0);
 
                 count++;
@@ -64,8 +66,8 @@ namespace tskmgr.Controls
         /// <param name="now"></param>
         protected override void SetAxisLimits(DateTime now)
         {
-            AxisMax = now.Ticks + TimeSpan.FromSeconds(1).Ticks;
-            AxisMin = now.Ticks - TimeSpan.FromSeconds(100).Ticks;
+            AxisMax = now.Ticks + TimeSpan.FromSeconds(2).Ticks;
+            AxisMin = now.Ticks - TimeSpan.FromSeconds(20).Ticks;
         }
     }
 }

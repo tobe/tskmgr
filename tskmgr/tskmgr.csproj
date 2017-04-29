@@ -71,9 +71,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\CPUControl.xaml.cs">
+    <Compile Include="Controls\Graphs\CPUControl.xaml.cs">
       <DependentUpon>CPUControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Graphs\GraphControl.cs" />
     <Compile Include="Controls\RAMControl.xaml.cs">
       <DependentUpon>RAMControl.xaml</DependentUpon>
     </Compile>
@@ -90,11 +91,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\CPUControl.xaml">
+    <Page Include="Controls\Graphs\CPUControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ProcessControl.xaml">
+    <Page Include="Controls\Graphs\ProcessControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -117,7 +118,7 @@
     <Compile Include="Controls\ApplicationsControl.xaml.cs">
       <DependentUpon>ApplicationsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ProcessControl.xaml.cs">
+    <Compile Include="Controls\Graphs\ProcessControl.xaml.cs">
       <DependentUpon>ProcessControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
