@@ -130,6 +130,19 @@ namespace tskmgr
             }
         }
 
+        public ProcessList ParseProcessIntoProcessList(System.Diagnostics.Process p)
+        {
+            ProcessList singleProcess   = new ProcessList();
+            singleProcess.ProcessId     = p.Id;
+            singleProcess.ProcessName   = (p.ProcessName != "Idle") ? p.ProcessName + ".exe" : p.ProcessName;
+            singleProcess.ProcessTime   = this.ParseTotalProcessTime(p);
+            singleProcess.ThreadCount   = p.Threads.Count;
+            singleProcess.WorkingSet64  = p.WorkingSet64 / 1000;
+            singleProcess.PriorityClass = this.ParsePriority(p);
+
+            return singleProcess;
+        }
+
         /// <summary>
         /// Vraća kolekciju (ObservableCollection) ProcessList klasâ.
         /// </summary>
@@ -142,16 +155,8 @@ namespace tskmgr
             System.Diagnostics.Process[] localProcesses = System.Diagnostics.Process.GetProcesses();
             foreach (var p in localProcesses)
             {
-                ProcessList singleProcess   = new ProcessList();
-                singleProcess.ProcessId     = p.Id;
-                singleProcess.ProcessName   = (p.ProcessName != "Idle") ? p.ProcessName + ".exe" : p.ProcessName;
-                singleProcess.ProcessTime   = this.ParseTotalProcessTime(p);
-                singleProcess.ThreadCount   = p.Threads.Count;
-                singleProcess.WorkingSet64  = p.WorkingSet64 / 1000;
-                singleProcess.PriorityClass = this.ParsePriority(p);
-
                 // I dodaj u kolekciju.
-                returnList.Add(singleProcess);
+                returnList.Add(this.ParseProcessIntoProcessList(p));
             }
 
             return returnList;

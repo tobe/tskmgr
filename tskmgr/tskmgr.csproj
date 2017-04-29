@@ -75,7 +75,7 @@
       <DependentUpon>CPUControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Graphs\GraphControl.cs" />
-    <Compile Include="Controls\RAMControl.xaml.cs">
+    <Compile Include="Controls\Graphs\RAMControl.xaml.cs">
       <DependentUpon>RAMControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="CPUWindow.xaml.cs">
@@ -95,11 +95,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Graphs\ProcessControl.xaml">
+    <Page Include="Controls\ProcessControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\RAMControl.xaml">
+    <Page Include="Controls\Graphs\RAMControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -118,7 +118,7 @@
     <Compile Include="Controls\ApplicationsControl.xaml.cs">
       <DependentUpon>ApplicationsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Graphs\ProcessControl.xaml.cs">
+    <Compile Include="Controls\ProcessControl.xaml.cs">
       <DependentUpon>ProcessControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
