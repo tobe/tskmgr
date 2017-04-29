@@ -57,15 +57,5 @@ namespace tskmgr.Controls
                 count++;
             }
         }
-
-        /// <summary>
-        /// Postavlja granice osi
-        /// </summary>
-        /// <param name="now"></param>
-        protected override void SetAxisLimits(DateTime now)
-        {
-            AxisMax = now.Ticks + TimeSpan.FromSeconds(1).Ticks;
-            AxisMin = now.Ticks - TimeSpan.FromSeconds(100).Ticks;
-        }
     }
 }

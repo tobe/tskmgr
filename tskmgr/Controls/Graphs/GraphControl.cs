@@ -9,6 +9,7 @@ namespace tskmgr.Controls
 {
     /// <summary>
     /// GraphControla koju extendaju (inheritaju) CPUControl i RAMControl.
+    /// Originalna implementacija (primjer) --> https://lvcharts.net/App/examples/v1/wpf/Constant%20Changes
     /// </summary>
     public class GraphControl : UserControl, INotifyPropertyChanged
     {
@@ -76,10 +77,19 @@ namespace tskmgr.Controls
             }
         }
 
-        /* Virtualne funkcije koje child klase (CPUControl, RAMControl)
+        /* Virtualna funkcija koju child klase (CPUControl, RAMControl)
          * inheritaju i specificiraju vlastite implementacije */
-        protected virtual void SetAxisLimits(DateTime now) { }
         protected virtual void Read() { }
+
+        /// <summary>
+        /// Postavlja donju i gornju granicu na osima.
+        /// </summary>
+        /// <param name="now"></param>
+        protected void SetAxisLimits(DateTime now)
+        {
+            AxisMax = now.Ticks + TimeSpan.FromSeconds(2).Ticks; // 2 sekunde ispred-
+            AxisMin = now.Ticks - TimeSpan.FromSeconds(20).Ticks; // i 20 izad.
+        }
 
         /// <summary>
         /// Postavlja graf.
