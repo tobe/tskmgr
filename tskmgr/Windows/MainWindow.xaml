@@ -37,7 +37,9 @@
             <TabItem Header="Applications">
                 <Controls:ApplicationsControl></Controls:ApplicationsControl>
             </TabItem>
-            <TabItem Header="Services" />
+            <TabItem Header="Services">
+                <Controls:ServicesControl></Controls:ServicesControl>
+            </TabItem>
             <TabItem Header="Specifications" />
         </TabControl>
     </Grid>

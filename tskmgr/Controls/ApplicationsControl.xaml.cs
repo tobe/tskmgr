@@ -3,7 +3,9 @@ using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -19,6 +21,12 @@ namespace tskmgr.Controls
 
         // ObservableCollection kolekcija informacija o aplikacijama
         public ObservableCollection<DesktopWindow> Applications { get; set; }
+
+        [DllImport("user32.dll")]
+        internal static extern IntPtr SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        internal static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         public ApplicationsControl()
         {
@@ -44,6 +52,20 @@ namespace tskmgr.Controls
         // TODO: http://stackoverflow.com/questions/25578305/c-sharp-focus-window-of-a-runing-program
 
         /// <summary>
+        /// Metoda pozvana nakon što se stisne na dugme "Bring to Front". Fokusira glavni prozor aplikacije.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BringToFrontButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Dohvati trenutnu aplikaciju
+            DesktopWindow selectedApplication = this.DataGrid.SelectedItem as DesktopWindow;
+
+            ShowWindow(selectedApplication.HWnd, 3);
+            SetForegroundWindow(selectedApplication.HWnd);
+        }
+
+        /// <summary>
         /// Metoda pozvana nakon što se stisne na dugme "End Application". Slično kao i kod Process kontrole.
         /// </summary>
         /// <param name="sender"></param>
@@ -63,7 +85,13 @@ namespace tskmgr.Controls
 
                 // Poruka!
                 await this.metroWindow.ShowMessageAsync("Success", String.Format("{0}.exe has been successfully ended.", selectedApplication.Title));
-            }catch (System.ArgumentException _e) {
+            }catch (Win32Exception _e) {
+                await this.metroWindow.ShowMessageAsync("Error", "The associated process could not be terminated: " + _e.Message);
+            }catch (NotSupportedException _e) {
+                await this.metroWindow.ShowMessageAsync("Error", "You are attempting to call Kill for a process that is running on a remote computer. The method is available only for processes running on the local computer: " + _e.Message);
+            } catch (InvalidOperationException _e) {
+                await this.metroWindow.ShowMessageAsync("Error", "The process has already exited: " + _e.Message);
+            } catch (System.ArgumentException _e) {
                 await this.metroWindow.ShowMessageAsync("Error", "There has been trouble ending the application: " + _e.Message);
             }
         }

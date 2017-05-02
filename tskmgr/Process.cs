@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 
@@ -114,7 +115,7 @@ namespace tskmgr
                     default:
                         return "Unknown";
                 }
-            }catch {
+            }catch(Exception e) when (e is Win32Exception || e is InvalidEnumArgumentException || e is InvalidOperationException) {
                 return "Unknown";
             }
         }
@@ -128,7 +129,7 @@ namespace tskmgr
         {
             try {
                 return p.TotalProcessorTime.ToString(@"h\h\ m\m");
-            }catch {
+            }catch (Exception e) when (e is Win32Exception || e is InvalidEnumArgumentException || e is InvalidOperationException) {
                 return "0h 0m";
             }
         }

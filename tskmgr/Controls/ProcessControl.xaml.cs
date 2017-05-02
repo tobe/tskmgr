@@ -127,8 +127,14 @@ namespace tskmgr.Controls
                 this.ProcessCollection.Remove(selectedProcess);
 
                 await this.metroWindow.ShowMessageAsync("Success", String.Format("{0} has been successfully killed.", selectedProcess.ProcessName));
+            }catch (Win32Exception _e) {
+                await this.metroWindow.ShowMessageAsync("Error", "The associated process could not be terminated: " + _e.Message);
+            }catch (NotSupportedException _e) {
+                await this.metroWindow.ShowMessageAsync("Error", "You are attempting to call Kill for a process that is running on a remote computer. The method is available only for processes running on the local computer: " + _e.Message);
+            }catch(InvalidOperationException _e) {
+                await this.metroWindow.ShowMessageAsync("Error", "The process has already exited: " + _e.Message);
             }catch (System.ArgumentException _e) {
-                await this.metroWindow.ShowMessageAsync("Error", "There has been trouble killing the process: " + _e.Message);
+                await this.metroWindow.ShowMessageAsync("Error", "There has been trouble ending the application: " + _e.Message);
             }
         }
 
@@ -148,8 +154,12 @@ namespace tskmgr.Controls
             try {
                 System.Diagnostics.Process.Start(result);
                 await this.metroWindow.ShowMessageAsync("New Process", "The process " + result + " has been successfully started.");
-            }catch(System.ComponentModel.Win32Exception _e) {
-                await this.metroWindow.ShowMessageAsync("Error", "There has been an error trying to invoke the process: " + _e.Message);
+            }catch(Win32Exception _e) {
+                await this.metroWindow.ShowMessageAsync("Error", "An error occurred when opening the associated file: " + _e.Message);
+            }catch(ObjectDisposedException _e) {
+                await this.metroWindow.ShowMessageAsync("Error", "The process object has already been disposed: " + _e.Message);
+            }catch (System.IO.FileNotFoundException _e) {
+                await this.metroWindow.ShowMessageAsync("Error", "The PATH environment variable has a string containing quotes.: " + _e.Message);
             }
         }
 

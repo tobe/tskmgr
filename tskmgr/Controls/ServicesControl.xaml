@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="tskmgr.Controls.ApplicationsControl"
+﻿<UserControl x:Class="tskmgr.Controls.ServicesControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -17,17 +17,20 @@
         </Grid.ColumnDefinitions>
 
         <DataGrid Grid.Row="0" Grid.Column="0" x:Name="DataGrid" SelectionUnit="FullRow"
-                  ItemsSource="{Binding Path=Applications, IsAsync=False, Mode=TwoWay}"
+                  ItemsSource="{Binding Path=Services, IsAsync=False, Mode=TwoWay}"
                   SelectionMode="Single" IsSynchronizedWithCurrentItem="False" AutoGenerateColumns="False"
                   CanUserAddRows="False" IsReadOnly="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Title" Binding="{Binding Title}" />
+                <DataGridTextColumn Header="Friendly name" Binding="{Binding DisplayName}" />
+                <DataGridTextColumn Header="Name" Binding="{Binding ServiceName}" />
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
+                <DataGridTextColumn Header="Can stop" Binding="{Binding CanStop}" />
+                <DataGridTextColumn Header="Can shutdown" Binding="{Binding CanStop}" />
             </DataGrid.Columns>
         </DataGrid>
 
         <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
-            <Button x:Name="EndApplicationButton" Click="EndApplicationButton_Click" Width="auto" Margin="2 2 10 2">End Application</Button>
-            <Button x:Name="BringToFrontButton" Click="BringToFrontButton_Click"  Width="auto" Margin="2 2 2 2">Bring to Front</Button>
+            <Button x:Name="StopServiceButton" Click="StopServiceButton_Click" Width="auto" Margin="2 2 10 2">Stop Service</Button>
         </StackPanel>
     </Grid>
 </UserControl>

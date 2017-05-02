@@ -24,6 +24,13 @@ namespace tskmgr
             set { this.processId = value; this.NotifyPropertyChanged("ProcessId"); }
         }
 
+        private IntPtr hWnd;
+        public IntPtr HWnd
+        {
+            get { return this.hWnd; }
+            set { this.hWnd = value; this.NotifyPropertyChanged("HWnd"); }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged(string propName)
         {
@@ -67,7 +74,7 @@ namespace tskmgr
                 var ProcessId = GetWindowThreadProcessId(hWnd, out pid);
 
                 if (title.Length > 0 && isVisible)
-                    collection.Add(new DesktopWindow { Title = title, ProcessId = pid });
+                    collection.Add(new DesktopWindow { Title = title, ProcessId = pid, HWnd = hWnd });
 
                 return true;
             };

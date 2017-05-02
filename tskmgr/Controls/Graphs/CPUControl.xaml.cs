@@ -14,6 +14,12 @@ namespace tskmgr.Controls
         public CPUControl()
         {
             InitializeComponent();
+
+            /*
+             * Quick fix za CPU counter -- potrebno zato jer PRVI poziv na NextValue() nikada ne vraća "dobru" vrijednost.
+             * Stoga ga je potrebno "inicijalizirati" kako bi u grafu dobili prvu pravilnu vrijednost, a ne -5 milijardi.
+             */
+            this.CpuCounter.NextValue();
         }
 
         /// <summary>
