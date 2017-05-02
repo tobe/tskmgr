@@ -1,23 +1,11 @@
 ﻿using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace tskmgr.Controls
 {
@@ -52,6 +40,8 @@ namespace tskmgr.Controls
             foreach(var application in User32Helper.GetDesktopWindows())
                 this.Applications.Add(application);
         }
+
+        // TODO: http://stackoverflow.com/questions/25578305/c-sharp-focus-window-of-a-runing-program
 
         /// <summary>
         /// Metoda pozvana nakon što se stisne na dugme "End Application". Slično kao i kod Process kontrole.

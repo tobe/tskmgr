@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 
@@ -121,6 +119,11 @@ namespace tskmgr
             }
         }
 
+        /// <summary>
+        /// Parsira ukupno vrijeme procesora koje zauzima proces p
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
         private string ParseTotalProcessTime(System.Diagnostics.Process p)
         {
             try {
@@ -130,6 +133,13 @@ namespace tskmgr
             }
         }
 
+        /// <summary>
+        /// Parsira System.Diagnostics.Process u vlastitu Process klasu. Na ovaj način izbjegavamo višak nepotrebnih
+        /// informacija i offloadamo količinu podataka koju GUI mora preuzeti (jer je bindan s ObservableCollector 
+        /// kolekcijom tipa ProcessList)
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
         public ProcessList ParseProcessIntoProcessList(System.Diagnostics.Process p)
         {
             ProcessList singleProcess   = new ProcessList();

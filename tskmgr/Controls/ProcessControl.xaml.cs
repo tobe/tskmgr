@@ -1,16 +1,11 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
-using System.Threading;
 using System.Windows;
-using System.Windows.Threading;
 using System;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Data;
-using System.Data;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
@@ -53,10 +48,10 @@ namespace tskmgr.Controls
 
         /// <summary>
         /// Asinkrona metoda koja dohvaća nove podatke i ažurira GUI
+        /// http://stackoverflow.com/questions/19558644/update-an-observablecollection-from-another-collection
         /// </summary>
         private void UpdateData()
         {
-            // http://stackoverflow.com/questions/19558644/update-an-observablecollection-from-another-collection
             while (true)
             {
                 // 1. Pozovi UI nit da očisti sve trenutne procese
@@ -93,12 +88,6 @@ namespace tskmgr.Controls
                 // I to čini svakih 5 sekundi.
                 Task.Delay(5000).Wait();
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         /// <summary>
@@ -162,6 +151,12 @@ namespace tskmgr.Controls
             }catch(System.ComponentModel.Win32Exception _e) {
                 await this.metroWindow.ShowMessageAsync("Error", "There has been an error trying to invoke the process: " + _e.Message);
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -1,23 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 using MahApps.Metro.Controls;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Windows.Controls.Primitives;
-using System.Diagnostics;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace tskmgr
@@ -44,6 +28,11 @@ namespace tskmgr
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Metoda koja se poziva nakon što se pritisne na dugme "CPU Graph"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void CPUWindowButton_Click(object sender, RoutedEventArgs e)
         {
             // Provjeri je li već pokrenut.
@@ -72,6 +61,11 @@ namespace tskmgr
             this.CPUWindowRunning = true;
         }
 
+        /// <summary>
+        /// Metoda koja se poziva nakon što se pritisne na dugme "RAM Graph"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void RAMWindowButton_Click(object sender, RoutedEventArgs e)
         {
             // Provjeri je li već pokrenut.
@@ -100,24 +94,40 @@ namespace tskmgr
             this.RAMWindowRunning = true;
         }
 
+        /// <summary>
+        /// Metodak koja se poziva nakon što se zatvori CPU graph.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnCPUWindowClose(object sender, CancelEventArgs e)
         {
+            // Potrebno je iz dotične niti pozvati InvokeShutdown proceduru kako ne bi nit ostala raditi nakon što se prozor zatvori.
             System.Windows.Threading.Dispatcher.FromThread(CPUThread).InvokeShutdown();
             this.CPUWindowRunning = false;
         }
 
+        /// <summary>
+        /// Metoda koja se poziva nakon što se zatvori RAM graph.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnRAMWindowClose(object sender, CancelEventArgs e)
         {
             System.Windows.Threading.Dispatcher.FromThread(RAMThread).InvokeShutdown();
             this.RAMWindowRunning = false;
         }
 
+        /// <summary>
+        /// Metoda koja se poziva nakon što se zatvori glavni prozor.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MetroWindow_Closing(object sender, CancelEventArgs e)
         {
             // Prvo izgasi threadove pa app ;)
-            if(CPUThread != null)
+            if (CPUThread != null)
                 System.Windows.Threading.Dispatcher.FromThread(CPUThread).InvokeShutdown();
-            if(RAMThread != null)
+            if (RAMThread != null)
                 System.Windows.Threading.Dispatcher.FromThread(RAMThread).InvokeShutdown();
 
             App.Current.Shutdown();
