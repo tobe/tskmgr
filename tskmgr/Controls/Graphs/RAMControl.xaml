@@ -44,7 +44,7 @@
             <lvc:CartesianChart.AxisY>
                 <lvc:Axis Foreground="White" FontSize="20">
                     <lvc:Axis.Separator>
-                        <lvc:Separator StrokeThickness="1" Stroke="#8EFFFFFF" StrokeDashArray="8" Step="50"/>
+                        <lvc:Separator StrokeThickness="1" Stroke="#8EFFFFFF" StrokeDashArray="8" Step="100"/>
                     </lvc:Axis.Separator>
                 </lvc:Axis>
             </lvc:CartesianChart.AxisY>
