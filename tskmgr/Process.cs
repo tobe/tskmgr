@@ -99,7 +99,7 @@ namespace tskmgr
             // Pokušaj dohvatit i parsirat prioritet (ukoliko imamo prava i sl.)
             try {
                 return p.PriorityClass.ToString();
-            }catch(Exception e) when (e is Win32Exception || e is InvalidEnumArgumentException || e is InvalidOperationException) {
+            }catch {
                 return "Unknown";
             }
         }
@@ -113,7 +113,7 @@ namespace tskmgr
         {
             try {
                 return p.TotalProcessorTime.ToString(@"h\h\ m\m");
-            }catch (Exception e) when (e is Win32Exception || e is InvalidEnumArgumentException || e is PlatformNotSupportedException || e is NotSupportedException) {
+            }catch {
                 return "0h 0m";
             }
         }

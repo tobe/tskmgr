@@ -54,36 +54,45 @@ namespace tskmgr.Controls
         {
             while (true)
             {
-                // 1. Pozovi UI nit da očisti sve trenutne procese
-                App.Current.Dispatcher.BeginInvoke((Action)delegate {
-                    this.ProcessCollection.Clear();
-                });
-
-                var newProcesses = oProcess.GetProcessList(); // Dohvati nove procese
-                // 2. Pozovi UI nit da doda svaki unos, jedan po jedan -- Smanjuje blokiranje GUI niti na koju se offloada cijela kolekcija.
-                foreach (var p in newProcesses)
+                try
                 {
-                    App.Current.Dispatcher.BeginInvoke((Action)delegate {
-                        this.ProcessCollection.Add(p);
-                    });
-                }
-                
-                // 3. Par stvarčica na kraju
-                App.Current.Dispatcher.BeginInvoke((Action)delegate {
-                    // Nakon ažuriranja kolekcije (uključujući i sortiranje), pronađi prethodno selektirani element i reselektiraj ga.
-                    int i;
-                    for(i = 0; i < this.ProcessCollection.Count; i++)
+                    // 1. Pozovi UI nit da očisti sve trenutne procese
+                    App.Current.Dispatcher.BeginInvoke((Action)delegate
                     {
-                        if (this.ProcessCollection[i].ProcessId == this.lastPID) break;
-                    }
-                    if(i < this.ProcessCollection.Count)
-                        DataGrid.SelectedItem = this.ProcessCollection[i];
+                        this.ProcessCollection.Clear();
+                    });
 
-                    // Ažuriraj CPU i RAM Usage
-                    this.CPUUsage.Text      = String.Format("CPU Usage: {0}%", (int)oProcess.GetTotalCpuUsage);
-                    this.MemoryUsage.Text   = String.Format("Available Memory: {0}MB", (int)oProcess.GetTotalMemoryUsage);
-                    this.Processes.Text     = String.Format("Processes: {0}", this.ProcessCollection.Count.ToString());
-                });
+                    var newProcesses = oProcess.GetProcessList(); // Dohvati nove procese
+                    // 2. Pozovi UI nit da doda svaki unos, jedan po jedan -- Smanjuje blokiranje GUI niti na koju se offloada cijela kolekcija.
+                    foreach (var p in newProcesses)
+                    {
+                        App.Current.Dispatcher.BeginInvoke((Action)delegate
+                        {
+                            this.ProcessCollection.Add(p);
+                        });
+                    }
+
+                    // 3. Par stvarčica na kraju
+                    App.Current.Dispatcher.BeginInvoke((Action)delegate
+                    {
+                        // Nakon ažuriranja kolekcije (uključujući i sortiranje), pronađi prethodno selektirani element i reselektiraj ga.
+                        int i;
+                        for (i = 0; i < this.ProcessCollection.Count; i++)
+                        {
+                            if (this.ProcessCollection[i].ProcessId == this.lastPID) break;
+                        }
+                        if (i < this.ProcessCollection.Count)
+                            DataGrid.SelectedItem = this.ProcessCollection[i];
+
+                        // Ažuriraj CPU i RAM Usage
+                        this.CPUUsage.Text = String.Format("CPU Usage: {0}%", (int)oProcess.GetTotalCpuUsage);
+                        this.MemoryUsage.Text = String.Format("Available Memory: {0}MB", (int)oProcess.GetTotalMemoryUsage);
+                        this.Processes.Text = String.Format("Processes: {0}", this.ProcessCollection.Count.ToString());
+                    });
+                }catch(NullReferenceException) {
+                    // Ukoliko se u milisekundi zatvaranja aplikacije izvrši "Invoke", "App" postane null. Tada moramo prekinuti petlju jer se ionako aplikacija zatvara.
+                    break;
+                }
 
                 // I to čini svakih 5 sekundi.
                 Task.Delay(5000).Wait();
@@ -153,7 +162,7 @@ namespace tskmgr.Controls
             // Pokušaj ga započeti.
             try {
                 System.Diagnostics.Process.Start(result);
-                await this.metroWindow.ShowMessageAsync("New Process", "The process " + result + " has been successfully started.");
+                await this.metroWindow.ShowMessageAsync("New Process", String.Format("{0} has been successfully started.", result));
             }catch(Win32Exception _e) {
                 await this.metroWindow.ShowMessageAsync("Error", "An error occurred when opening the associated file: " + _e.Message);
             }catch(ObjectDisposedException _e) {
