@@ -49,8 +49,8 @@ namespace tskmgr.Controls
         {
             try {
                 var mbo = new ManagementObjectSearcher("SELECT * FROM Win32_BaseBoard").Get().Cast<ManagementObject>().First();
-                this.Specifications.Add(new SpecsItem() { Title = "MBO manufacturer", Value = mbo["Manufacturer"].ToString() });
-                this.Specifications.Add(new SpecsItem() { Title = "MBO model", Value = mbo["Product"].ToString() });
+                this.Specifications.Add(new SpecsItem() { Title = "MBO manufacturer", Value = mbo["Manufacturer"] != null ? mbo["Manufacturer"].ToString() : "Unknown" });
+                this.Specifications.Add(new SpecsItem() { Title = "MBO model", Value = mbo["Product"] != null ? mbo["Product"].ToString() : "Unknown" });
                 this.Specifications.Add(new SpecsItem() { Title = "MBO replaceable?", Value = (bool)mbo["Replaceable"] ? "Yes" : "No" });
             }
             catch (Exception e) {
@@ -65,12 +65,12 @@ namespace tskmgr.Controls
         {
             try {
                 var gpu = new ManagementObjectSearcher("SELECT * FROM Win32_VideoController").Get().Cast<ManagementObject>().First();
-                this.Specifications.Add(new SpecsItem() { Title = "GPU ID", Value = gpu["DeviceID"].ToString() });
-                this.Specifications.Add(new SpecsItem() { Title = "GPU name", Value = gpu["Name"].ToString() });
-                this.Specifications.Add(new SpecsItem() { Title = "GPU memory", Value = gpu["AdapterRAM"].ToString() });
-                this.Specifications.Add(new SpecsItem() { Title = "GPU DAC type", Value = gpu["AdapterDACType"].ToString() });
-                this.Specifications.Add(new SpecsItem() { Title = "GPU driver version", Value = gpu["DriverVersion"].ToString() });
-                this.Specifications.Add(new SpecsItem() { Title = "GPU video processor", Value = gpu["VideoProcessor"].ToString() });
+                this.Specifications.Add(new SpecsItem() { Title = "GPU ID", Value = gpu["DeviceID"] != null ? gpu["DeviceID"].ToString() : "Unknown" });
+                this.Specifications.Add(new SpecsItem() { Title = "GPU name", Value = gpu["Name"] != null ? gpu["Name"].ToString() : "Unknown" });
+                this.Specifications.Add(new SpecsItem() { Title = "GPU memory", Value = gpu["AdapterRAM"] != null ? gpu["AdapterRAM"].ToString() : "Unknown" });
+                this.Specifications.Add(new SpecsItem() { Title = "GPU DAC type", Value = gpu["AdapterDACType"] != null ? gpu["AdapterDACType"].ToString() : "Unknown" });
+                this.Specifications.Add(new SpecsItem() { Title = "GPU driver version", Value = gpu["DriverVersion"] != null ? gpu["DriverVersion"].ToString() : "Unknown" });
+                this.Specifications.Add(new SpecsItem() { Title = "GPU video processor", Value = gpu["VideoProcessor"] != null ? gpu["VideoProcessor"].ToString() : "Unknown" });
             }
             catch (Exception e) {
                 await this.metroWindow.ShowMessageAsync("Error", "An error occured while querying for WMI/GPU data: " + e.Message);
@@ -84,15 +84,16 @@ namespace tskmgr.Controls
         {
             try {
                 var cpu = new ManagementObjectSearcher("SELECT * FROM Win32_Processor").Get().Cast<ManagementObject>().First();
-                this.Specifications.Add(new SpecsItem() { Title = "CPU ID", Value = cpu["ProcessorId"].ToString() });
-                this.Specifications.Add(new SpecsItem() { Title = "CPU name", Value = cpu["Name"].ToString() });
-                this.Specifications.Add(new SpecsItem() { Title = "CPU description", Value = cpu["Caption"].ToString() });
-                this.Specifications.Add(new SpecsItem() { Title = "CPU frequency (MHz)", Value = cpu["MaxClockSpeed"].ToString() });
-                this.Specifications.Add(new SpecsItem() { Title = "CPU L2 cache size (MB)", Value = ((uint)cpu["L2CacheSize"]).ToString() });
-                this.Specifications.Add(new SpecsItem() { Title = "CPU L3 cache size (MB)", Value = ((uint)cpu["L3CacheSize"]).ToString() });
-                this.Specifications.Add(new SpecsItem() { Title = "CPU cores", Value = cpu["NumberOfCores"].ToString() });
-                this.Specifications.Add(new SpecsItem() { Title = "CPU threads", Value = cpu["NumberOfLogicalProcessors"].ToString() });
-            }catch(ManagementException e) {
+                this.Specifications.Add(new SpecsItem() { Title = "CPU ID", Value = cpu["ProcessorId"] != null ? cpu["ProcessorId"].ToString() : "Unknown" });
+                this.Specifications.Add(new SpecsItem() { Title = "CPU name", Value = cpu["Name"] != null ? cpu["Name"].ToString() : "Unknown" });
+                this.Specifications.Add(new SpecsItem() { Title = "CPU description", Value = cpu["Caption"] != null ? cpu["Caption"].ToString() : "Unknown" });
+                this.Specifications.Add(new SpecsItem() { Title = "CPU frequency (MHz)", Value = cpu["MaxClockSpeed"] != null ? cpu["MaxClockSpeed"].ToString() : "Unknown" });
+                this.Specifications.Add(new SpecsItem() { Title = "CPU L2 cache size (MB)", Value = cpu["L2CacheSize"] != null ? ((uint)cpu["L2CacheSize"]).ToString() : "Unknown" });
+                this.Specifications.Add(new SpecsItem() { Title = "CPU L3 cache size (MB)", Value = cpu["L2CacheSize"] != null ? ((uint)cpu["L3CacheSize"]).ToString() : "Unknown"});
+                this.Specifications.Add(new SpecsItem() { Title = "CPU cores", Value = cpu["NumberOfCores"] != null ? cpu["NumberOfCores"].ToString() : "Unknown" });
+                this.Specifications.Add(new SpecsItem() { Title = "CPU threads", Value = cpu["NumberOfLogicalProcessors"] != null ? cpu["NumberOfLogicalProcessors"].ToString() : "Unknown" });
+            }
+            catch(ManagementException e) {
                 await this.metroWindow.ShowMessageAsync("Error", "An error occured while querying for WMI/CPU data: " + e.Message);
             }
         }
