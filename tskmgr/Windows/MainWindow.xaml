@@ -40,6 +40,9 @@
             <TabItem Header="Services">
                 <Controls:ServicesControl></Controls:ServicesControl>
             </TabItem>
+            <TabItem Header="Network">
+                <Controls:NetworkControl></Controls:NetworkControl>
+            </TabItem>
             <TabItem Header="Specifications">
                 <Controls:SpecificationsControl></Controls:SpecificationsControl>
             </TabItem>
