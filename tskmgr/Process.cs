@@ -98,23 +98,7 @@ namespace tskmgr
         {
             // Pokušaj dohvatit i parsirat prioritet (ukoliko imamo prava i sl.)
             try {
-                switch (p.PriorityClass)
-                {
-                    case ProcessPriorityClass.Normal:
-                        return "Normal";
-                    case ProcessPriorityClass.Idle:
-                        return "Idle";
-                    case ProcessPriorityClass.High:
-                        return "High";
-                    case ProcessPriorityClass.RealTime:
-                        return "Realtime";
-                    case ProcessPriorityClass.BelowNormal:
-                        return "Below normal";
-                    case ProcessPriorityClass.AboveNormal:
-                        return "Above normal";
-                    default:
-                        return "Unknown";
-                }
+                return p.PriorityClass.ToString();
             }catch(Exception e) when (e is Win32Exception || e is InvalidEnumArgumentException || e is InvalidOperationException) {
                 return "Unknown";
             }
@@ -129,7 +113,7 @@ namespace tskmgr
         {
             try {
                 return p.TotalProcessorTime.ToString(@"h\h\ m\m");
-            }catch (Exception e) when (e is Win32Exception || e is InvalidEnumArgumentException || e is InvalidOperationException) {
+            }catch (Exception e) when (e is Win32Exception || e is InvalidEnumArgumentException || e is PlatformNotSupportedException || e is NotSupportedException) {
                 return "0h 0m";
             }
         }

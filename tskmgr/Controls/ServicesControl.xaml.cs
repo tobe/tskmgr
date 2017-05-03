@@ -59,12 +59,6 @@ namespace tskmgr.Controls
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         /// <summary>
         /// Metoda pozvana nakon što se stisne na dugme "Stop Service". Slično kao i kod Process, Applications kontrola.
         /// </summary>
@@ -92,6 +86,12 @@ namespace tskmgr.Controls
             }catch(InvalidOperationException _e) {
                 await this.metroWindow.ShowMessageAsync("Error", "The service was not found. : " + _e.Message);
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
