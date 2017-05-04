@@ -90,7 +90,8 @@ namespace tskmgr.Controls
                         this.Processes.Text = String.Format("Processes: {0}", this.ProcessCollection.Count.ToString());
                     });
                 }catch(NullReferenceException) {
-                    // Ukoliko se u milisekundi zatvaranja aplikacije izvrši "Invoke", "App" postane null. Tada moramo prekinuti petlju jer se ionako aplikacija zatvara.
+                    /* Ukoliko se u milisekundi zatvaranja aplikacije izvrši "Invoke", "App" postane null.
+                     * Tada moramo prekinuti petlju jer se ionako aplikacija zatvara. */
                     break;
                 }
 
@@ -110,7 +111,6 @@ namespace tskmgr.Controls
             ProcessList newSelectedProcess = this.DataGrid.SelectedItem as ProcessList;
             if (newSelectedProcess == null) return; // ili DataGrid.SelectedIndex == -1
 
-            Debug.WriteLine(newSelectedProcess.ProcessName + " - " + newSelectedProcess.ProcessId + ", index:" + this.DataGrid.SelectedIndex);
             // Ažuriraj lastPID tako da pokazuje na njegov PID.
             this.lastPID = newSelectedProcess.ProcessId;
         }
@@ -168,7 +168,7 @@ namespace tskmgr.Controls
             }catch(ObjectDisposedException _e) {
                 await this.metroWindow.ShowMessageAsync("Error", "The process object has already been disposed: " + _e.Message);
             }catch (System.IO.FileNotFoundException _e) {
-                await this.metroWindow.ShowMessageAsync("Error", "The PATH environment variable has a string containing quotes.: " + _e.Message);
+                await this.metroWindow.ShowMessageAsync("Error", "The PATH environment variable has a string containing quotes: " + _e.Message);
             }
         }
 

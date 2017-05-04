@@ -42,6 +42,7 @@ namespace tskmgr.Controls
         {
             InitializeComponent();
 
+            // Pronađi sučelje
             this.InvokeInterface();
 
             SeriesCollection = new SeriesCollection
@@ -60,18 +61,23 @@ namespace tskmgr.Controls
                 }
             };
 
-            Labels = new[] { "Received",
+            Labels = new[] {
+                "Received",
                 "Sent",
                 "Incoming discarded",
                 "Incoming erroneous",
                 "Incoming unknown",
                 "Outgoing discarded",
-                "Outgoing erroneous" };
+                "Outgoing erroneous"
+            };
             Formatter = value => value.ToString("N");
 
             this.DataContext = this;
         }
 
+        /// <summary>
+        /// Ažurira podatke sa sučelja.
+        /// </summary>
         private void UpdateStats()
         {
             IPv4InterfaceStatistics interfaceStats = this.interfaceInfo.GetIPv4Statistics();
@@ -89,6 +95,9 @@ namespace tskmgr.Controls
             };
         }
 
+        /// <summary>
+        /// Dohvaća sučelje i ažurira podatke.
+        /// </summary>
         private async void InvokeInterface()
         {
             try
