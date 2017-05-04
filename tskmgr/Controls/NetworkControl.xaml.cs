@@ -1,25 +1,15 @@
 ﻿using MahApps.Metro.Controls;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using LiveCharts;
 using LiveCharts.Wpf;
 using MahApps.Metro.Controls.Dialogs;
-using System.Diagnostics;
 
 namespace tskmgr.Controls
 {
@@ -31,7 +21,7 @@ namespace tskmgr.Controls
         // Referenca na glavni MahApps prozor
         private MetroWindow metroWindow = (Application.Current.MainWindow as MetroWindow);
 
-        // Potrebna funkcija iz WINAPI-ja
+        // P/Invokeaj funkciju iz WINAPI-ja
         [DllImport("iphlpapi.dll", SetLastError = true)]
         static extern int GetBestInterface(UInt32 DestAddr, out UInt32 BestIfIndex);
 
@@ -43,6 +33,7 @@ namespace tskmgr.Controls
         private ChartValues<long> Bytes;
         private ChartValues<long> Packets;
 
+        // Stvari za graf
         public SeriesCollection SeriesCollection { get; set; }
         public string[] Labels { get; set; }
         public Func<double, string> Formatter { get; set; }
@@ -69,7 +60,13 @@ namespace tskmgr.Controls
                 }
             };
 
-            Labels = new[] { "Received", "Sent", "Incoming discarded", "Incoming erroneous", "Incoming unknown", "Outgoing discarded", "Outgoing erroneous"};
+            Labels = new[] { "Received",
+                "Sent",
+                "Incoming discarded",
+                "Incoming erroneous",
+                "Incoming unknown",
+                "Outgoing discarded",
+                "Outgoing erroneous" };
             Formatter = value => value.ToString("N");
 
             this.DataContext = this;
@@ -94,9 +91,9 @@ namespace tskmgr.Controls
 
         private async void InvokeInterface()
         {
-            // Pokušaj dohvatit apsolutno najbolje sučelje -- ono spojeno na internet
             try
             {
+                // Pokušaj dohvatit apsolutno najbolje sučelje -- ono spojeno na internet
                 UInt32 interfaceindex;
                 int result = GetBestInterface(134744072, out interfaceindex); // 8.8.8.8 = 134744072
                 if (result != 0)
