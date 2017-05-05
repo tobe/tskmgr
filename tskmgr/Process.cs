@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 
@@ -132,7 +131,7 @@ namespace tskmgr
             singleProcess.ProcessName   = (p.ProcessName != "Idle") ? p.ProcessName + ".exe" : p.ProcessName;
             singleProcess.ProcessTime   = this.ParseTotalProcessTime(p);
             singleProcess.ThreadCount   = p.Threads.Count;
-            singleProcess.WorkingSet64  = p.WorkingSet64 / 1000;
+            singleProcess.WorkingSet64  = p.WorkingSet64 / 1000000;
             singleProcess.PriorityClass = this.ParsePriority(p);
 
             return singleProcess;

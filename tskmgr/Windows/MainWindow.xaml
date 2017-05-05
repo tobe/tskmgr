@@ -7,7 +7,7 @@
         xmlns:Controls="clr-namespace:tskmgr.Controls"
         xmlns:local="clr-namespace:tskmgr"
         mc:Ignorable="d"
-        Title="tskmgr" Height="600" Width="900"
+        Title="tskmgr" Height="500" Width="1000"
                      
         BorderThickness="1" 
         BorderBrush="{DynamicResource AccentColorBrush}"

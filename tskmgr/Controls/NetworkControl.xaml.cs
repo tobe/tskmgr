@@ -10,6 +10,7 @@ using System.Windows.Media;
 using LiveCharts;
 using LiveCharts.Wpf;
 using MahApps.Metro.Controls.Dialogs;
+using System.Threading.Tasks;
 
 namespace tskmgr.Controls
 {
@@ -70,9 +71,22 @@ namespace tskmgr.Controls
                 "Outgoing discarded",
                 "Outgoing erroneous"
             };
-            Formatter = value => value.ToString("N");
+            Formatter = value => value.ToString("0.#");
 
             this.DataContext = this;
+
+
+            // Ukoliko imamo sučelje započni nit za asinkrono ažuriranje sadržaja
+            if (this.interfaceInfo != null)
+                this.AsyncUpdate();
+        }
+
+        /// <summary>
+        /// Poziva Task za asinkroni update grafa
+        /// </summary>
+        private async void AsyncUpdate()
+        {
+            await Task.Factory.StartNew(() => this.UpdateStats(), TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
@@ -80,19 +94,34 @@ namespace tskmgr.Controls
         /// </summary>
         private void UpdateStats()
         {
-            IPv4InterfaceStatistics interfaceStats = this.interfaceInfo.GetIPv4Statistics();
+            while(true)
+            {
+                // Dohvati najnoviju statistiku
+                IPv4InterfaceStatistics interfaceStats = this.interfaceInfo.GetIPv4Statistics();
 
-            // Ažuriraj vrijednosti, tj dodaj ih
-            this.Bytes   = new ChartValues<long> { interfaceStats.BytesReceived/1000000, interfaceStats.BytesSent/1000000 };
-            this.Packets = new ChartValues<long> {
-                (interfaceStats.NonUnicastPacketsReceived + interfaceStats.UnicastPacketsReceived) / 1000,
-                (interfaceStats.NonUnicastPacketsSent + interfaceStats.UnicastPacketsSent) / 1000,
-                interfaceStats.IncomingPacketsDiscarded,
-                interfaceStats.IncomingPacketsWithErrors,
-                interfaceStats.IncomingUnknownProtocolPackets,
-                interfaceStats.OutgoingPacketsDiscarded,
-                interfaceStats.OutgoingPacketsWithErrors
-            };
+                // Ažuriraj vrijednosti, tj dodaj ih
+                this.Bytes = new ChartValues<long> { interfaceStats.BytesReceived / 1000000, interfaceStats.BytesSent / 1000000 };
+                this.Packets = new ChartValues<long> {
+                    (interfaceStats.NonUnicastPacketsReceived + interfaceStats.UnicastPacketsReceived) / 1000,
+                    (interfaceStats.NonUnicastPacketsSent + interfaceStats.UnicastPacketsSent) / 1000,
+                    interfaceStats.IncomingPacketsDiscarded,
+                    interfaceStats.IncomingPacketsWithErrors,
+                    interfaceStats.IncomingUnknownProtocolPackets,
+                    interfaceStats.OutgoingPacketsDiscarded,
+                    interfaceStats.OutgoingPacketsWithErrors
+                };
+
+                if (this.SeriesCollection == null) return;
+
+                App.Current.Dispatcher.BeginInvoke((Action)delegate
+                {
+                    this.SeriesCollection[0].Values = this.Bytes;
+                    this.SeriesCollection[1].Values = this.Packets;
+                });
+
+                // Svaku minutu ažuriraj graf
+                Task.Delay(60000).Wait();
+            }
         }
 
         /// <summary>
@@ -114,7 +143,7 @@ namespace tskmgr.Controls
                 this.InterfaceDescription = this.interfaceInfo.Description;
 
                 // Sve super sad dohvati statistiku (ne throwa ništa)
-                this.UpdateStats();
+                //this.UpdateStats();
             }
             catch (Win32Exception)
             {
