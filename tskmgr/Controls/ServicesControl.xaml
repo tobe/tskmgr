@@ -17,7 +17,7 @@
         </Grid.ColumnDefinitions>
 
         <DataGrid Grid.Row="0" Grid.Column="0" x:Name="DataGrid" SelectionUnit="FullRow"
-                  ItemsSource="{Binding Path=Services, IsAsync=False, Mode=TwoWay}"
+                  ItemsSource="{Binding Path=Services, IsAsync=False}"
                   SelectionMode="Single" IsSynchronizedWithCurrentItem="False" AutoGenerateColumns="False"
                   CanUserAddRows="False" IsReadOnly="True">
             <DataGrid.Columns>

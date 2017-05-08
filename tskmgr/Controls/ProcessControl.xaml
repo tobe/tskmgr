@@ -23,7 +23,7 @@
 
         <DataGrid Grid.Row="0" Grid.Column="0" x:Name="DataGrid" SelectionUnit="FullRow"
                   SelectionChanged="DataGrid_SelectionChanged"
-                  ItemsSource="{Binding Path=ProcessCollection, IsAsync=False, Mode=TwoWay}"
+                  ItemsSource="{Binding Path=ProcessCollection, IsAsync=True}"
                   SelectionMode="Single" IsSynchronizedWithCurrentItem="False" AutoGenerateColumns="False"
                   CanUserAddRows="False" IsReadOnly="True">
             <DataGrid.Columns>
