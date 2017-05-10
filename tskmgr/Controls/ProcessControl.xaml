@@ -25,7 +25,8 @@
                   SelectionChanged="DataGrid_SelectionChanged"
                   ItemsSource="{Binding Path=ProcessCollection, IsAsync=True}"
                   SelectionMode="Single" IsSynchronizedWithCurrentItem="False" AutoGenerateColumns="False"
-                  CanUserAddRows="False" IsReadOnly="True">
+                  CanUserAddRows="False" IsReadOnly="True"
+                  EnableColumnVirtualization="True" EnableRowVirtualization="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="PID" Binding="{Binding ProcessId}" />
                 <DataGridTextColumn Header="Image" Binding="{Binding ProcessName}" />

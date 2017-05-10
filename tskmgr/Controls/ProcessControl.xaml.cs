@@ -63,7 +63,23 @@ namespace tskmgr.Controls
                     });
 
                     var newProcesses = oProcess.GetProcessList(); // Dohvati nove procese
-                    // 2. Pozovi UI nit da doda svaki unos, jedan po jedan -- Smanjuje blokiranje GUI niti na koju se offloada cijela kolekcija.
+
+                    /*
+                     * 2. Pozovi UI nit da doda svaki unos, jedan po jedan
+                     * Smanjuje blokiranje GUI niti na koju se offloada cijela kolekcija.
+                     * 
+                     * Ovo također smanjuje i "flicker", odnosno pojavu da ukoliko se nalazi veliki broj procesa u DataGridu,
+                     * poput 150, da cijela lista nestane na sekundu i onda opet se stvori sekundu nakon.
+                     * Alternativa je da sve procese stavimo u novu kolekciju i zatim postavim ItemSource na nju, ali na taj način
+                     * gubimo sortiranje koje se ovako održava među ažuriranjem liste. Također, unutar XAML datoteke, postavljen je
+                     * Async parametar na /true/ i uključena je virtualizacija: http://stackoverflow.com/questions/13764579/improve-wpf-datagrid-performance
+                     * 
+                     * Nažalost, stvar je da se može apsolutno svaka stavka procesa promijeniti, osim njegovog PID-a i imena.
+                     * Još jedan workaround bi bio uspoređivati svako svojstvo postojećeg procesa, s novim procesima i na taj način
+                     * ažurirati listu -- naravno, dodavati i brisati postojeće procese ako je to potrebno. No međutim, izgleda da 
+                     * ne postoji ni elegantno rješenje za ovo: http://stackoverflow.com/questions/19558644/update-an-observablecollection-from-another-collection
+                     * Uz to, potrebno je voditi računa o trenutno odabranom elementu i sortiranju.
+                     */
                     foreach (var p in newProcesses)
                     {
                         App.Current.Dispatcher.BeginInvoke((Action)delegate
