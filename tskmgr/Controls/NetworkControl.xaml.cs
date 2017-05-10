@@ -141,9 +141,6 @@ namespace tskmgr.Controls
                 this.interfaceInfo = GetNetworkInterfaceByIndex(interfaceindex);
                 if (this.interfaceInfo == null) throw new Win32Exception();
                 this.InterfaceDescription = this.interfaceInfo.Description;
-
-                // Sve super sad dohvati statistiku (ne throwa ništa)
-                //this.UpdateStats();
             }
             catch (Win32Exception)
             {
