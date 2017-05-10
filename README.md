@@ -1,6 +1,6 @@
 # tskmgr
 
-A simple task manager built in WPF. As a uni project.
+A simple task manager built in WPF. As a uni project (hence all the comments are in Croatian, but I'm sure you'll find your way through).
 
 ![tskmgr](https://raw.github.com/tobe/tskmgr/master/screenshot.png)
 
